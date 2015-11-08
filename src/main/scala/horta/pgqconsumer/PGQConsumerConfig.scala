@@ -9,5 +9,7 @@ case class PGQConsumerConfig (
   initialDelay: FiniteDuration,
   interval: FiniteDuration,
   queueName: String,
-  consumerName: String
+  consumerName: String,
+  retryEventsOnFailure: Boolean = true,                           
+  eventRetryDelaySeconds: Int = 10
 )

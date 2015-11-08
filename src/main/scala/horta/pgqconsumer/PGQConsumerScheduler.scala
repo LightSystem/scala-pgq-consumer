@@ -20,7 +20,6 @@ class PGQConsumerScheduler(
       context.system.scheduler.schedule(configuration.initialDelay, configuration.interval, self, "tick")
   }
 
-
   override def postStop() = tick.cancel()
 
   private val consumer = new PGQConsumer(configuration.queueName, configuration.consumerName)
@@ -32,7 +31,16 @@ class PGQConsumerScheduler(
   }
 
   def handleBatch(batchID: Long) = {
-    consumer.getNextBatch(batchID).foreach(eventHandler.handle)
+
+    consumer.getNextBatch(batchID).foreach(event => {
+      try {
+        eventHandler.handle(event)
+      } catch {
+        case e: Exception if configuration.retryEventsOnFailure =>
+          consumer.retryEventLater(batchID, event.getId, configuration.eventRetryDelaySeconds)
+      }
+    })
+
     consumer.finishBatch(batchID)
   }
 }

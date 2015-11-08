@@ -87,4 +87,22 @@ class PGQConsumer(queueName: String, consumerName: String) {
       'batchId -> batchID
     ).as(scalar[Int].single)
   }
+
+  /**
+   *
+   * @param batchID Batch ID of the event to retry
+   * @param eventID Event to retry
+   * @param eventRetrySeconds Time to elapse before putting the event back into the queue
+   */
+  def retryEventLater(batchID: Long, eventID: Long, eventRetrySeconds: Int)(implicit connection: Connection) = {
+    SQL(
+      """
+        | select * from pgq.event_retry({batchId}, {eventId}, {eventRetrySeconds})
+      """.stripMargin
+    ).on(
+      'batchId -> batchID,
+      'eventId -> eventID,
+      'eventRetrySeconds -> eventRetrySeconds
+    ).as(scalar[Int].single)
+  }
 }
