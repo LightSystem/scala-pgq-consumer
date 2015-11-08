@@ -2,16 +2,24 @@ package horta.pgqconsumer
 
 import java.sql.Connection
 
-import akka.actor.Actor
+import akka.actor.{ActorSystem, Actor}
 import com.brandwatch.pgqconsumer.PGQEventHandler
 
 /**
  * Created by horta on 07/11/15.
  */
-class PGQConsumerScheduler(configuration: PGQConsumerConfig, eventHandler: PGQEventHandler)(implicit connection: Connection) extends Actor {
+class PGQConsumerScheduler(
+  configuration: PGQConsumerConfig, eventHandler: PGQEventHandler, actorSystem: Option[ActorSystem] = None
+)(implicit connection: Connection) extends Actor {
   import context.dispatcher
 
-  private val tick = context.system.scheduler.schedule(configuration.initialDelay, configuration.interval, self, "tick")
+  private val tick = {
+    if(actorSystem.isDefined)
+      actorSystem.get.scheduler.schedule(configuration.initialDelay, configuration.interval, self, "tick")
+    else
+      context.system.scheduler.schedule(configuration.initialDelay, configuration.interval, self, "tick")
+  }
+
 
   override def postStop() = tick.cancel()
 
