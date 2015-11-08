@@ -1,7 +1,7 @@
-pgq-consumer [![Build Status](https://travis-ci.org/BrandwatchLtd/pgq-consumer.svg)](https://travis-ci.org/BrandwatchLtd/pgq-consumer)
+scala-pgq-consumer [![Build Status](https://travis-ci.org/BrandwatchLtd/pgq-consumer.svg)](https://travis-ci.org/BrandwatchLtd/pgq-consumer)
 ============
 
-A PGQ consumer written in Java, using Spring's ```JdbcTemplate``` for database access.
+A PGQ consumer written in Scala, using Anorm for database access and Akka for scheduling consumer events.
 
 What's PGQ?
 -----------
@@ -13,19 +13,4 @@ A good presentation on PGQ is [available on SlideShare](http://www.slideshare.ne
 How do I use it?
 ----------------
 
-As mentioned before, this code originated from a Spring application, so it assumes two things:
-
-1. That you've set up PGQ in your PostgreSQL database
-2. That your application has a DataSource pointing to that database
-
-Once you have those, create a ```PGQConsumer```:
-  
-  ```java
-String queueName = "myQueue";                         // What you called your queue in pgq.create_queue()
-String consumerName = "myConsumer";                   // A name unique to this application
-DataSource dataSource = ...                           // Initialised and pointing at your database
-PGQEventHandler eventHandler = new MyEventHandler();  // Your callback for each event
-PGQConsumer pgqConsumer = new PGQConsumer(queueName, consumerName, dataSource, eventHandler);
-```
-
-The ```PGQConsumer``` is a ```Runnable```, so put it into a pool for continuous execution, and away you go. If you're looking for an example ```PGQEventHandler``` then check out ```PrintingEventHandler```.
+(UNDER CONSTRUCTION) Check back later!
