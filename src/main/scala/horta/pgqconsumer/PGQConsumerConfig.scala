@@ -10,6 +10,5 @@ case class PGQConsumerConfig (
   interval: FiniteDuration,
   queueName: String,
   consumerName: String,
-  retryEventsOnFailure: Boolean = true,                           
-  eventRetryDelaySeconds: Int = 10
+  registerConsumer: Boolean = true
 )

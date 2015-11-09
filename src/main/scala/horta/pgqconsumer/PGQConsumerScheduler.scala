@@ -3,13 +3,12 @@ package horta.pgqconsumer
 import java.sql.Connection
 
 import akka.actor.{ActorSystem, Actor}
-import com.brandwatch.pgqconsumer.PGQEventHandler
 
 /**
  * Created by horta on 07/11/15.
  */
 class PGQConsumerScheduler(
-  configuration: PGQConsumerConfig, eventHandler: PGQEventHandler, actorSystem: Option[ActorSystem] = None
+  configuration: PGQConsumerConfig, batchHandler: PGQBatchHandler, actorSystem: Option[ActorSystem] = None
 )(implicit connection: Connection) extends Actor {
   import context.dispatcher
 
@@ -26,20 +25,12 @@ class PGQConsumerScheduler(
 
   def receive = {
     case "tick" =>
-      consumer.registerIfNeeded()
+      if(configuration.registerConsumer) consumer.registerIfNeeded()
       consumer.getNextBatchID().foreach(handleBatch)
   }
 
   def handleBatch(batchID: Long) = {
-
-    consumer.getNextBatch(batchID).foreach(event => {
-      try {
-        eventHandler.handle(event)
-      } catch {
-        case e: Exception if configuration.retryEventsOnFailure =>
-          consumer.retryEventLater(batchID, event.getId, configuration.eventRetryDelaySeconds)
-      }
-    })
+    batchHandler.handleBatch(consumer.getNextBatch(batchID))
 
     consumer.finishBatch(batchID)
   }
