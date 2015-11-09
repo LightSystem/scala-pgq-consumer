@@ -13,4 +13,15 @@ A good presentation on PGQ is [available on SlideShare](http://www.slideshare.ne
 How do I use it?
 ----------------
 
-(UNDER CONSTRUCTION) Check back later!
+  1. Create a PGQConsumerConfig instance which will determine the behaviour of the consumer. The following is configurable:
+    - initialDelay: delay passed to scheduler determining the time to wait before sending the first consume message to the consumer actor.
+    - interval: frequency with which to send consume messages to the consumer actor.
+    - queueName: name of the queue from which to consume.
+    - consumerName: name of the consumer that will consume the events.
+    - retryEventsOnFailure: true if you want to send failed events (when the handler thros an exception) to PGQ retry event, false otherwise.
+    - eventRetryDelaySeconds: delay for when the retry event should be put back into queue.
+  2. Create an instance of PGQConsumerScheduler with the following parameter:
+    - configuration: the configuration defined above.
+    - eventHandler: your handler that will be called with the detail of each event.
+    - actorSystem: optionally pass an Akka ActorSystem to be used to schedule the consumer events.
+  3. That should be it!
