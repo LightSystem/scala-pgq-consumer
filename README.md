@@ -18,10 +18,10 @@ How do I use it?
     - interval: frequency with which to send consume messages to the consumer actor.
     - queueName: name of the queue from which to consume.
     - consumerName: name of the consumer that will consume the events.
-    - retryEventsOnFailure: true if you want to send failed events (when the handler throws an exception) to PGQ retry event, false otherwise.
-    - eventRetryDelaySeconds: delay for when the retry event should be put back into queue.
-  2. Create an instance of PGQConsumerScheduler with the following parameter:
+    - registerConsumer: (optional) by default the library registers the consumer for you, set to false if you want to handle that yourself.
+  2. Create an instance of PGQConsumerScheduler with the following parameters:
     - configuration: the configuration defined above.
-    - eventHandler: your handler that will be called with the detail of each event.
+    - batchHandler: your handler that will be called with the detail of each event.
     - actorSystem: optionally pass an Akka ActorSystem to be used to schedule the consumer events.
-  3. That should be it!
+  
+The library will take care to call your batch handler with the list of events every time the consumer fetched a batch from PGQ.
