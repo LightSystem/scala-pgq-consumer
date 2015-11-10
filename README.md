@@ -19,7 +19,7 @@ How do I use it?
     - queueName: name of the queue from which to consume.
     - consumerName: name of the consumer that will consume the events.
     - registerConsumer: (optional) by default the library registers the consumer for you, set to false if you want to handle that yourself.
-  2. PGQConsumerActor is an Akka actor that needs the following parameters:
+2. PGQConsumerActor is an Akka actor that needs the following parameters:
     - configuration: the configuration defined above.
     - batchHandler: your handler that will be called with list of events that correspond to a batch.
   
