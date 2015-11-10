@@ -7,7 +7,7 @@ import akka.actor.Actor
 /**
  * Created by horta on 07/11/15.
  */
-class PGQConsumerScheduler(configuration: PGQConsumerConfig, batchHandler: PGQBatchHandler)(implicit connection: Connection) extends Actor {
+class PGQConsumerActor(configuration: PGQConsumerConfig, batchHandler: PGQBatchHandler)(implicit connection: Connection) extends Actor {
 
   private val tick = {
     context.system.scheduler.schedule(configuration.initialDelay, configuration.interval, self, "tick")
